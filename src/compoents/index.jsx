@@ -48,6 +48,16 @@ const Index = () => {
   const handleOpen = () => {
     setOpen(true);
   };
+  
+  const handleFileInputChange = (e) => {
+    const file = e.target.files[0];
+    UploadFile(file);
+  }
+  const handleChange = (e) => {
+    let name1 = e.target.value;
+    setName(name1);
+  }
+
   const Reset = () => {
     localStorage.setItem("count", 0);
     window.location.replace("/");
@@ -67,33 +77,25 @@ const Index = () => {
     padding: "30px",
   };
 
-  const onSubmit = () => {
-    axios.post("/", { image: image, name: name }).then((res) => {
-      let temp = parseInt(localStorage.getItem("count")) + 1;
+  const updateCount = () =>{
+    let temp = parseInt(localStorage.getItem("count")) + 1;
       localStorage.setItem("count", temp);
       window.location.replace("/");
+  }
+
+  const onSubmit = () => {
+    axios.post("/", { image: image, name: name }).then((res) => {
+     updateCount();
     });
   };
 
   const onUpdate = () => {
     axios.patch("/", { image: image, name: name }).then((res) => {
-      let temp = parseInt(localStorage.getItem("count")) + 1;
-      localStorage.setItem("count", temp);
-      window.location.replace("/");
+      updateCount();
     });
   };
 
-  function handleFileInputChange(e) {
-    
-    const file = e.target.files[0];
-    console.log('file',file)
-    UploadFile(file);
-  }
-  function handleChange(e) {
-    let name1 = e.target.value;
-    setName(name1);
-  }
-
+  
   const UploadFile = (file) => {
     const reader = new FileReader();
     reader.readAsDataURL(file);
@@ -103,7 +105,11 @@ const Index = () => {
   };
 
   return (
-    <div style={{ height: "100%" }}>
+    <div style={{ height: "100vh",width: '100%',
+    overflowY:'auto',
+    overflowX:'hidden',
+    scrollbarWidth: 'none'
+    }}>
       <AppBar
         position="fixed"
         centerTitle="true"
@@ -111,7 +117,6 @@ const Index = () => {
       >
         <div style={{ display: "flex", justifyContent: "space-around" }}>
           <div style={{ padding: "10px", flexGrow: "3" }}>
-            {" "}
             <Button
               variant="contained"
               onClick={handleOpen}
@@ -199,14 +204,12 @@ const Index = () => {
         onClose={handleClose}
         aria-labelledby="form-dialog-title"
       >
-        <DialogTitle id="form-dialog-title">Insert Image</DialogTitle>
-        <DialogContent>
-          <DialogContentText>Choose field.</DialogContentText>
+        <DialogTitle style={{display:'flex',justifyContent:'center', color:'brown'}}>Insert Image</DialogTitle>
+        <DialogContent style={{display:'flex', flexDirection:'column',  justifyContent:'space-between'}}>
           
           <TextField
-          id="outlined-select-currency"
           select
-          label="Select"
+          label="Choose Field"
           value={name}
           onChange={handleChange}
           variant="outlined"
@@ -216,8 +219,9 @@ const Index = () => {
               {option.label}
             </MenuItem>
           ))}
+          
         </TextField>
-        <label htmlFor="upload-photo">
+        <label htmlFor="upload-photo" style={{marginTop:'10px',display:'flex',justifyContent:'center'}}>
         <input
           style={{ display: "none" }}
           id="upload-photo"
