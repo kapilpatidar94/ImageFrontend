@@ -5,39 +5,20 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  DialogContentText,
   DialogTitle,
   MenuItem,
   TextField,
   Fab
 } from "@material-ui/core";
 import AddCircleIcon from '@material-ui/icons/AddCircle';
-
 import { Resizable } from "re-resizable";
+import {PLACES, input} from './CONSTANTS'
 import axios from "../axios";
 
 const Index = () => {
-  let input = {
-    image1: "",
-    image2: "",
-    image3: "",
-  };
-  const places = [
-    {
-      value: '1',
-      label: 'Field 1',
-    },
-    {
-      value: '2',
-      label: 'Field 2',
-    },
-    {
-      value: '3',
-      label: 'Field 3',
-    }
-  ]
-
-  const [imgdata, setImgdata] = useState(input);
+ 
+  
+  const [imgDB, setImgDB] = useState(input);
   const [image, setImage] = useState("");
   const [name, setName] = useState("");
   const [open, setOpen] = useState(false);
@@ -65,7 +46,7 @@ const Index = () => {
 
   useEffect(() => {
     axios.get("/").then((res) => {
-      setImgdata(res.data);
+      setImgDB(res.data);
     });
   }, []);
 
@@ -172,7 +153,7 @@ const Index = () => {
             <div>
               <Resizable style={style}>
                 <img
-                  src={`${imgdata.image1}`}
+                  src={`${imgDB.image1}`}
                   alt="First Place"
                   style={{ width: "100%", height: "100%" }}
                 />
@@ -181,7 +162,7 @@ const Index = () => {
             <div style={{ paddingInline: "10px" }}>
               <Resizable style={style}>
                 <img
-                  src={imgdata.image2}
+                  src={imgDB.image2}
                   alt="Second Place"
                   style={{ width: "100%", height: "100%" }}
                 />
@@ -191,7 +172,7 @@ const Index = () => {
           <div style={{ marginTop: "20px" }}>
             <Resizable style={style}>
               <img
-                src={imgdata.image3}
+                src={imgDB.image3}
                 alt="Third Place"
                 style={{ width: "100%", height: "100%" }}
               />
@@ -214,7 +195,7 @@ const Index = () => {
           onChange={handleChange}
           variant="outlined"
         >
-          {places.map((option) => (
+          {PLACES.map((option) => (
             <MenuItem key={option.value} value={option.value}>
               {option.label}
             </MenuItem>
